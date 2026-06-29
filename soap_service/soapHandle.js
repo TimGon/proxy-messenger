@@ -6,6 +6,7 @@ const db = require("../db/queries");
 const wsdlPath = path.join(__dirname, "wsdl.xml");
 const wsdlXml = fs.readFileSync(wsdlPath, "utf-8");
 
+// основная обработка следующих операций: авторизации, регистрации и получение истории сообщений
 const serviceSoap = {
   proxyMessengerService: {
     proxyMessengerPort: {
