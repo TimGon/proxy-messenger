@@ -4,6 +4,7 @@ const db = require('../db/queries')
 // переменная для сохранения пользователей, которые будут подключатся.
 const users = new Map();
 
+// функция отправки сообщения, когда второй пользователь есть в сети по протоколу Websocket
 function sendToUser (userId, data) {
   const ws = users.get(userId)
   if(ws && ws.readyState === webSocket.OPEN) {
