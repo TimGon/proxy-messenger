@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions
+    name="ProxyMessenger"
+    targetNamespace="http://proxy-messenger/soap"
+    xmlns="http://schemas.xmlsoap.org/wsdl/"
+    xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+    xmlns:tns="http://proxy-messenger/soap"
+>
+   <types>
+      <schema
+         targetNamespace="http://proxy-messenger/soap"
+         xmlns="http://www.w3.org/2001/XMLSchema"
+      >
+         <element name="loginRequest">
+            <complexType>
+               <sequence>
+                  <element name="login" type="string"/>
+                  <element name="password" type="string"/>
+               </sequence>
+            </complexType>
+         </element>
+         <element name="loginResponse">
+            <complexType>
+               <sequence>
+                  <element name="success" type="boolean"/>
+                  <element name="sessionToken" type="string"/>
+                  <element name="message" type="string"/>
+               </sequence>
+            </complexType>
+         </element>
+         <element name="registerRequest">
+            <complexType>
+               <sequence>
+                  <element name="login" type="string"/>
+                  <element name="password" type="string"/>
+               </sequence>
+            </complexType>
+         </element>
+         <element name="registerResponse">
+            <complexType>
+               <sequence>
+                  <element name="success" type="boolean"/>
+                  <element name="message" type="string"/>
+               </sequence>
+            </complexType>
+         </element>
+         
+
+	<element name="getHistoryRequest">
+            <complexType>
+               <sequence>
+                  <element name="sessionToken" type="string"/>
+                  <element name="otherUserId" type="int"/>
+                  <element name="limit" type="int" minOccurs ="0"/>
+               </sequence>
+            </complexType>
+         </element>
+         <element name="getHistoryResponse">
+            <complexType>
+               <sequence>
+                  <element name="messages" type="tns:messageArray" minOccurs="0"/>
+                  <element name="error" type="string" minOccurs="0"/>
+               </sequence>
+            </complexType>
+         </element>
+
+
+         <complexType name="messageArray">
+               <sequence>
+                  <element name="message" type="tns:messageType" maxOccurs="unbounded"/>
+               </sequence>
+            </complexType>
+         
+         <complexType name="messageType">
+               <sequence>
+                  <element name="message_id" type="string"/>
+                  <element name="from_user_id" type="int"/>
+                  <element name="send_user_id" type="int"/>
+                  <element name="text" type="string"/>
+                  <element name="sent_at" type="dateTime"/>
+               </sequence>
+            </complexType>
+      </schema>
+   </types>
+
+   <message name="loginRequestMessage">
+      <part name="parameters" element="tns:loginRequest"/>
+   </message>
+   <message name="loginResponseMessage">
+      <part name="parameters" element="tns:loginResponse"/>
+   </message>
+
+   <message name="registerRequestMessage">
+      <part name="parameters" element="tns:registerRequest"/>
+   </message>
+   <message name="registerResponseMessage">
+      <part name="parameters" element="tns:registerResponse"/>
+   </message>
+   
+   <message name="getHistoryRequestMessage">
+      <part name="parameters" element="tns:getHistoryRequest"/>
+   </message>
+   <message name="getHistoryResponseMessage">
+      <part name="parameters" element="tns:getHistoryResponse"/>
+   </message>
+   
+   <portType name="proxyMessengerPortType">
+      <operation name="login">
+         <input name="loginRequest" message="tns:loginRequestMessage"/>
+         <output name="loginResponse" message="tns:loginResponseMessage"/>
+      </operation>
+      <operation name="register">
+         <input name="registerRequest" message="tns:registerRequestMessage"/>
+         <output name="registerResponse" message="tns:registerResponseMessage"/>
+      </operation>
+      <operation name="getHistory">
+         <input name="getHistoryRequest" message="tns:getHistoryRequestMessage"/>
+         <output name="getHistoryResponse" message="tns:getHistoryResponseMessage"/>
+      </operation>
+   </portType>
+
+   <binding name="proxyMessengerBinding" type="tns:proxyMessengerPortType">
+      <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+      <operation name="login">
+         <soap:operation soapAction="login"/>
+         <input name="loginRequest">
+            <soap:body use="literal"/>
+         </input>
+         <output name="loginResponse">
+            <soap:body use="literal"/>
+         </output>
+      </operation>
+      <operation name="register">
+         <soap:operation soapAction="register"/>
+         <input name="registerRequest">
+            <soap:body use="literal"/>
+         </input>
+         <output name="registerResponse">
+            <soap:body use="literal"/>
+         </output>
+      </operation>
+      <operation name="getHistory">
+         <soap:operation soapAction="getHistory"/>
+         <input name="getHistoryRequest">
+            <soap:body use="literal"/>
+         </input>
+         <output name="getHistoryResponse">
+            <soap:body use="literal"/>
+         </output>
+      </operation>
+   </binding>
+
+   <service name="proxyMessengerService">
+      <port name="proxyMessengerPort" binding="tns:proxyMessengerBinding">
+         <soap:address location="http://localhost:8080/soap"/>
+      </port>
+   </service>
+</definitions>
