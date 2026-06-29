@@ -1,5 +1,5 @@
 const { Pool} = require('pg')
-require('.env')
+require('dotenv').config()
 
 const pool = new Pool({
     host: process.env.DB_HOST,
@@ -12,7 +12,7 @@ const pool = new Pool({
     connectionTimeoutMillis: 2000 // 2 секунды при ожидании соединения
 })
 
-pool.on('connect', () => console.log('Подключен к PostgreSQL'))
-pool.on('error', (err) => console.error('Ошибка при подключении', err))
+// pool.on('connect', () => console.log('Подключен к PostgreSQL'))
+// pool.on('error', (err) => console.error('Ошибка при подключении', err))
 
 module.exports = pool
