@@ -1,0 +1,29 @@
+config:
+  target: "ws://localhost:8080/ws"
+  payload:
+    path: "tokens.csv"
+    fields:
+      - sessionToken
+      - userId
+    order: random
+  ensure: 
+    maxErrorRate: 1
+  phases:
+    - duration: 120
+      arrivalRate: 20
+      rampTo: 20
+      name: "Warm up"
+    - duration: 120
+      arrivalRate: 20
+      name: "Main test"
+scenarios:
+  - engine: ws
+    flow:
+      - connect: 
+          target: "ws://localhost:8080/ws"
+      - send: '{"type": "auth", "sessionToken": "{{ sessionToken}}"}'
+      - receive: '{"type": "auth", "status":"success"}'
+      - think: 1
+      - send: '{"type": "message", "from_user_id":"{{userId}}", "text": "Привет! Как дела?"}'
+      - receive: '{"type": "delivery_ack"}'
+  
