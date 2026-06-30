@@ -1,0 +1,54 @@
+config:
+  target: "http://localhost:8080/soap"
+  phases:
+    - duration: 60
+      arrivalRate: 10
+scenarios:
+  flow:
+    - name: "login request"
+    - post: 
+      headers:
+        Content-type: "text/xml"
+        SOAPAction: '"login"'
+        body: |
+          <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:tns="http://proxy-messenger/soap">
+            <soapenv:Header/>
+              <soapenv:Body>
+                  <tns:loginRequest>
+                    <tns:login>Oleg</tns:login>
+                    <tns:password>t1m</tns:password>
+                  </tns:loginRequest>
+              </soapenv:Body>
+          </soapenv:Envelope>
+          - name: "login request"
+    - name: "register request"
+    - post: 
+      headers:
+        Content-type: "text/xml"
+        SOAPAction: '"register"'
+        body: |
+          <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:tns="http://proxy-messenger/soap">
+            <soapenv:Header/>
+              <soapenv:Body>
+                  <tns:registerRequest>
+                    <tns:login>User1</tns:login>
+                    <tns:password>us1er</tns:password>
+                  </tns:registerRequest>
+              </soapenv:Body>
+          </soapenv:Envelope>
+          - name: "register request"
+    - post: 
+      headers:
+        Content-type: "text/xml"
+        SOAPAction: '"getHistory request"'
+        body: |
+          <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:tns="http://proxy-messenger/soap">
+            <soapenv:Header/>
+            <soapenv:Body>
+                <tns:getHistoryRequest>
+                  <tns:sessionToken>f67a0834-00d3-4590-b28b-661277bfc530</tns:sessionToken>
+                  <tns:otherUserId>3</tns:otherUserId>
+                  <tns:limit>2</tns:limit>
+                </tns:getHistoryRequest>
+            </soapenv:Body>
+          </soapenv:Envelope>
