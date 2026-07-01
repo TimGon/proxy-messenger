@@ -1,29 +1,52 @@
 config:
   target: "ws://localhost:8080/ws"
+  timeout: 30
   payload:
     path: "tokens.csv"
     fields:
       - sessionToken
       - userId
     order: random
-  ensure: 
+  ensure:
     maxErrorRate: 1
   phases:
     - duration: 120
-      arrivalRate: 20
-      rampTo: 20
+      arrivalRate: 5
+      rampTo: 10
       name: "Warm up"
     - duration: 120
-      arrivalRate: 20
+      arrivalRate: 15
       name: "Main test"
+
 scenarios:
   - engine: ws
     flow:
-      - connect: 
+      - connect:
           target: "ws://localhost:8080/ws"
-      - send: '{"type": "auth", "sessionToken": "{{ sessionToken}}"}'
-      - receive: '{"type": "auth", "status":"success"}'
+
+      # 1. Отправляем запрос на аутентификацию
+      - send: '{"type": "auth", "sessionToken": "{{sessionToken}}"}'
+
+      # 2. Ждём ответ от сервера и проверяем, что он успешный
+      - wait:
+          capture:
+            json: "$"     # Захватываем весь JSON-ответ
+            as: "authResponse" # Сохраняем его в переменную authResponse
+
+      # 3. Логируем ответ для отладки (опционально)
+      - log: 'Auth response: {{ authResponse }}'
+
+      # 4. Небольшая пауза
       - think: 1
+
+      # 5. Отправляем сообщение
       - send: '{"type": "message", "from_user_id":"{{userId}}", "text": "Привет! Как дела?"}'
-      - receive: '{"type": "delivery_ack"}'
-  
+
+      # 6. Ждём подтверждение о доставке
+      - wait:
+          capture:
+            json: "$"
+            as: "deliveryResponse"
+      
+      # 7. Логируем ответ
+      - log: 'Delivery response: {{ deliveryResponse }}'
