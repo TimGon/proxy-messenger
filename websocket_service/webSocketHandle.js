@@ -71,12 +71,15 @@ ws.on("connection", (ws) => {
         created_at: savedMessage.sent_at
       }
      })
+     console.log("Отправленное сообщение:", deliveredMessage)
      //если пользователя нет в сети то сообщаем пользователю об этом и сохраняем сообщение
-     if(!deliveredMessage) {
-      ws.send(JSON.stringify({type:'info', message:'Сообщение сохранено, пользователь находится в оффлайн'}))
-     } else {
-      ws.send(JSON.stringify({type:'success', message:'Сообщение доставлено пользователю'}))
-     }
+    //  if(!deliveredMessage) {
+    //   ws.send(JSON.stringify({type:'info', message:'Сообщение сохранено, пользователь находится в оффлайн'}))
+    //   console.log("Отправленное сообщение сохранено")
+    //  } else {
+    //   console.log("Сообщение доставлено")
+    //   ws.send(JSON.stringify({type:'success', message:'Сообщение доставлено пользователю'}))
+    //  }
     } catch (err) {
       console.error("Ошибка обработки WebSocket", err)
       ws.send(JSON.stringify({type:'error', message:'Некорректный JSON или внутреняя ошибка сервера'}))
